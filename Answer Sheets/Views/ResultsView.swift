@@ -21,13 +21,21 @@ struct ResultsView: View {
         let corr = a.stopGrading(sai, arr2: sai2, ter: total)
         VStack
             {
+                HStack
+                {
+                    Text("Your Answers:")//.padding(.leading, 40)
+                    Text("Answer Key:").padding(.leading, 25)
+                    Text("Questions to work on:").padding(.leading, 30)
+                    
+                }
+            
                 ScrollView()
                 {
                     HStack
                     {
                         LazyVStack(alignment: .leading)
                         {
-                            Text("Your Answers:").padding(.leading, 30)
+                            //Text("Your Answers:").padding(.leading, 30)
                             VStack
                             {
                                 ForEach(0..<total)
@@ -63,11 +71,11 @@ struct ResultsView: View {
                                         }
                                         if sai[i] == sai2[i]
                                         {
-                                            Image(systemName: "checkmark").foregroundColor(Color.green)
+                                            Image(systemName: "checkmark").foregroundColor(Color.blue)
                                         }
                                         else
                                         {
-                                            Image(systemName: "xmark").foregroundColor(Color.red)
+                                            Image(systemName: "xmark").foregroundColor(Color.pink)
                                         }
                                     }
                                 }
@@ -75,7 +83,7 @@ struct ResultsView: View {
                         }.padding(.leading, 25)
                         LazyVStack(alignment: .leading)
                         {
-                            Text("Answer Key:").padding(.leading, 30)
+                            //Text("Answer Key:").padding(.leading, 30)
                             VStack
                             {
                                 ForEach(0..<total)
@@ -122,50 +130,39 @@ struct ResultsView: View {
                                 }
                             }
                         }
+                        LazyVStack
+                        {
+                                ForEach(0..<wr.count)
+                                {i in
+                                    Text("\(wr[i]).").fontWeight(.bold)
+                                }.foregroundColor(Color.black)
+                        }
                     }
                     
                 }
                 
                 LazyVStack(alignment: .leading)
                 {
-                    let percentScore = (Double(corr)/Double(total)*100)
-                    Text("\(corr) out of \(total) answers correct").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 72.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
-                    Text("Score: \(percentScore)%").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
+                    let pS = (Double(corr)/Double(total)*100)
+                    let percentScore = round(pS * 10) / 10.0
+                    // roundedValue is 5.5
+                    
                     ZStack
                     {
                         Rectangle().multilineTextAlignment(.center).padding(.horizontal, 80.0).padding(.vertical, 15.0).background(Color.pink).cornerRadius(15).foregroundColor(Color.pink)
-                        HStack
-                        {
-                            Text("Questions to work on:").fontWeight(.bold).padding(5).background(Color.pink).foregroundColor(Color.white)
-                            ForEach(0..<wr.count)
-                            {i in
-                                if i == sai.count
-                                {
-                                    Text("\(wr[i])").fontWeight(.bold)
-                                }
-                                else
-                                {
-                                    Text("\(wr[i]),").fontWeight(.bold)
-                                }
-                            }.foregroundColor(Color.white)
-                        }
+                        Text("\(corr) out of \(total) answers correct").fontWeight(.bold).multilineTextAlignment(.center).foregroundColor(Color.white)
+                    }
+                    ZStack
+                    {
+                        Rectangle().multilineTextAlignment(.center).padding(.horizontal, 80.0).padding(.vertical, 15.0).background(Color.pink).cornerRadius(15).foregroundColor(Color.pink)
+                        Text("Score: \(Int(percentScore))%").fontWeight(.bold).multilineTextAlignment(.center).foregroundColor(Color.white)
                     }
                     
-                }.padding()
+                }.padding(.horizontal)
                 
                 
                 LazyVStack(alignment: .center)
                 {
-                    Button (
-                        action:
-                            {
-                                let d = Grader(sai, corr)
-                                d.grade()
-                                
-                            }, label: {
-                                Text("Show Grade").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 90.0).padding(.vertical, 10.0).background(Color.green).foregroundColor(Color.white).cornerRadius(15)
-                            }
-                    )
                     Button (
                         action:
                             {
@@ -183,7 +180,7 @@ struct ResultsView: View {
     }
     struct ResultsView_Previews: PreviewProvider {
         static var previews: some View {
-            ResultsView(sai: [1,2,3,4,5], sai2: [1,2,3,4,5], total: 5)
+            ResultsView(sai: [1,2,3,5,5], sai2: [1,2,3,4,5], total: 5)
         }
     }
 }

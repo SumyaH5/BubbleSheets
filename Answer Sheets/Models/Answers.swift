@@ -51,6 +51,16 @@ class Answer: Identifiable, Decodable
         }
         return corrAns
     }
+    
+    func stopTest(_ min:Int, _ hr:Int, _ sec:Int) -> Bool
+    {
+        var stawp = false
+        if min==0 && hr==0 && sec==0
+        {
+            stawp = true
+        }
+        return stawp
+    }
 }
 
 
