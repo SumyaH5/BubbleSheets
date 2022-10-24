@@ -15,15 +15,19 @@ struct SwiftUIView: View {
     @State var selectedMinutes = 0
     @State var selectedSeconds = 0
     @State var indices=[Int]()
+    @State var username: String = ""
+    @State private var showingSheet = false
     var body: some View {
         
         NavigationView
         {
+            
             VStack
             {
                 Spacer()
                 Spacer()
                 Spacer()
+                //TextField("Enter your test name", text: $username).padding().padding(.leading, 120).foregroundColor(Color.pink)
                 VStack
                 {
                     VStack(spacing:20)
@@ -41,6 +45,7 @@ struct SwiftUIView: View {
                         Text("SAT Math Test - Calculator").tag(38)
                         ForEach(0..<100)
                         {i in
+                            if i+1 != 52 &&
                             Text("\(i+1)").tag(i+1)
                         }
                         
@@ -87,6 +92,7 @@ struct SwiftUIView: View {
                                     }.pickerStyle(MenuPickerStyle())
                                 }
                             }
+                            TextField("Enter your test name", text: $username).foregroundColor(Color.pink).multilineTextAlignment(.center)
                         }
                     }
                     
@@ -96,48 +102,53 @@ struct SwiftUIView: View {
                 var a = selectedIndex + 0
                 if selectedIndex == 52
                 {
-                    NavigationLink(
-                        destination:
-                            TabView(arraySize: selectedIndex, text: "Select your answers: ", hours: 1, minutes:5, seconds:0),
-                        label: {
-                            Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.blue).foregroundColor(Color.white).cornerRadius(15)
-                        })
+                    Button {
+                        showingSheet.toggle()
+                    } label: {
+                        Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
+                    }.sheet(isPresented: $showingSheet) {
+                        TabOneView(arraySize: selectedIndex, text: "Select your answers: ", hours: 1, minutes:5, seconds:0, testName: "SAT Reading Test")
+                    }
                 }
                 else if selectedIndex == 44
                 {
-                    NavigationLink(
-                        destination:
-                            TabView(arraySize: selectedIndex, text: "Select your answers: ", hours: 0, minutes:35, seconds:0),
-                        label: {
-                            Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.blue).foregroundColor(Color.white).cornerRadius(15)
-                        })
+                    Button {
+                        showingSheet.toggle()
+                    } label: {
+                        Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
+                    }.sheet(isPresented: $showingSheet) {
+                        TabOneView(arraySize: selectedIndex, text: "Select your answers: ", hours: 0, minutes:35, seconds:0, testName: "SAT Writing and Language Test")
+                    }
                 }
                 else if selectedIndex == 20
                 {
-                    NavigationLink(
-                        destination:
-                            TabView(arraySize: selectedIndex, text: "Select your answers: ", hours: 0, minutes:25, seconds:0),
-                        label: {
-                            Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
-                        })
+                    Button {
+                        showingSheet.toggle()
+                    } label: {
+                        Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
+                    }.sheet(isPresented: $showingSheet) {
+                        TabOneView(arraySize: selectedIndex, text: "Select your answers: ", hours: 0, minutes:25, seconds:0, testName: "SAT Math Test - No Calculator")
+                    }
                 }
                 else if selectedIndex == 38
                 {
-                    NavigationLink(
-                        destination:
-                            TabView(arraySize: selectedIndex, text: "Select your answers: ", hours: 0, minutes:55, seconds:0),
-                        label: {
-                            Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
-                        })
+                    Button {
+                        showingSheet.toggle()
+                    } label: {
+                        Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
+                    }.sheet(isPresented: $showingSheet) {
+                        TabOneView(arraySize: selectedIndex, text: "Select your answers: ", hours: 0, minutes:55, seconds:0, testName: "SAT Math Test - Calculator")
+                    }
                 }
                 else
                 {
-                    NavigationLink(
-                        destination:
-                            TabView(arraySize: selectedIndex, text: "Select your answers: ", hours: selectedHours, minutes:selectedMinutes, seconds:selectedSeconds),
-                        label: {
-                            Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
-                        })
+                    Button {
+                        showingSheet.toggle()
+                    } label: {
+                        Text("Take the test").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 100.0).padding(.vertical, 10.0).background(Color.pink).foregroundColor(Color.white).cornerRadius(15)
+                    }.sheet(isPresented: $showingSheet) {
+                        TabOneView(arraySize: selectedIndex, text: "Select your answers: ", hours: selectedHours, minutes:selectedMinutes, seconds:selectedSeconds, testName: username)
+                    }
                 }
                 
                 

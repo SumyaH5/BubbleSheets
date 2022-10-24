@@ -15,10 +15,11 @@ struct ResultsView: View {
     var a = Answer("hhoi")
     
     var body: some View {
-//        NavigationView
-//        {
+        NavigationView
+        {
         let wr = a.startGrading(sai, arr2: sai2)
         let corr = a.stopGrading(sai, arr2: sai2, ter: total)
+        let bA = a.blankAnswers(sai)
         VStack
             {
                 HStack
@@ -26,7 +27,6 @@ struct ResultsView: View {
                     Text("Your Answers:")//.padding(.leading, 40)
                     Text("Answer Key:").padding(.leading, 25)
                     Text("Questions to work on:").padding(.leading, 30)
-                    
                 }
             
                 ScrollView()
@@ -172,7 +172,7 @@ struct ResultsView: View {
                             }
                     )
                 }.padding()
-            //}.navigationBarTitle("Your Results")
+            }.navigationBarHidden(true)
         
         
     }

@@ -11,7 +11,7 @@ import SwiftUI
 struct Answer_SheetsApp: App {
     var body: some Scene {
         WindowGroup {
-            SwiftUIView()
+            MainView()
         }
     }
 }

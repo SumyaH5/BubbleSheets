@@ -61,6 +61,34 @@ class Answer: Identifiable, Decodable
         }
         return stawp
     }
+    
+    func blankAnswers(_ arr1:[Int]) -> Int
+    {
+        var bA = 0
+        for i in 0..<arr1.count
+        {
+            if arr1[i] == 0
+            {
+                bA += 1
+            }
+                
+        }
+        return bA
+    }
+    
+    func changePage(_ arr1:[Int], _ size:Int) -> Bool
+    {
+        var cP = true
+        for i in 0..<size
+        {
+            if arr1[i] == 0
+            {
+                cP = false
+            }
+                
+        }
+        return cP
+    }
 }
 
 

@@ -6,18 +6,21 @@
 //
 
 import SwiftUI
+import AVKit
 
-struct TabView: View {
+struct TabOneView: View {
     @ObservedObject var model = AnswerModel()
     var arraySize:Int
     @State var selectedAnswerIndices = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     @State var selectedAnswerIndices2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    
+    var instance = Answer("hhoi")
     //    @State var selectedAnswerIndices:[Int]
     //    @State var selectedAnswerIndices2:[Int]
+    @State var audioPlayer: AVAudioPlayer!
     @State var submitted = false
     @State var correctAnswers = 0
     @State var disabled = false
+    @State var abled = false
     @State var enabled = true
     @State var comp = "complete"
     @State var text:String
@@ -29,113 +32,178 @@ struct TabView: View {
     @State var timerIsPaused: Bool = true
     @State var timer: Timer? = nil
     @State var ts = true
+    @State var testName:String
     let b = ["A", "B", "C", "D"]
     var c = Answer("boi")
     var body: some View
     {
-        var tim = c.stopTest(minutes, hours, seconds)
+        let cP = instance.changePage(selectedAnswerIndices2, arraySize)
+        let tim = c.stopTest(minutes, hours, seconds)
         NavigationView
         {
+            
             VStack()
             {
-                ZStack
+                HStack
                 {
-                    Rectangle().multilineTextAlignment(.center).frame(width: 140, height: 35).cornerRadius(15).foregroundColor(Color.pink)
-                    HStack() {
-                        
-                        Text("\(hours):\(minutes):\(seconds)").multilineTextAlignment(.trailing).foregroundColor(Color.white)
-                        
-                        if timerIsPaused {
-                            HStack(spacing: 0)  {
-                                Button(action:{
-                                    self.startTimer()
-                                    ts = false
-                                    print("START")
-                                }){
-                                    Image(systemName: "play.fill").foregroundColor(Color.white)
+                        ZStack
+                        {
+                            Rectangle().multilineTextAlignment(.center).frame(width: 120, height: 35).cornerRadius(15).foregroundColor(Color.pink)
+                            HStack() {
+                                if hours < 10 && minutes < 10 && seconds < 10
+                                {
+                                    Text("0\(hours):0\(minutes):0\(seconds)").multilineTextAlignment(.trailing).foregroundColor(Color.white)
+                                }
+                                else if hours < 10 && minutes < 10
+                                {
+                                    Text("0\(hours):0\(minutes):\(seconds)").multilineTextAlignment(.trailing).foregroundColor(Color.white)
+                                }
+                                else if hours < 10
+                                {
+                                    Text("0\(hours):\(minutes):\(seconds)").multilineTextAlignment(.trailing).foregroundColor(Color.white)
+                                }
+                                else if hours < 10 && seconds < 10
+                                {
+                                    Text("0\(hours):\(minutes):0\(seconds)").multilineTextAlignment(.trailing).foregroundColor(Color.white)
+                                }
+                                else if minutes < 10 && seconds < 10
+                                {
+                                    Text("\(hours):0\(minutes):0\(seconds)").multilineTextAlignment(.trailing).foregroundColor(Color.white)
+                                }
+                                else if minutes < 10
+                                {
+                                    Text("\(hours):0\(minutes):\(seconds)").multilineTextAlignment(.trailing).foregroundColor(Color.white)
+                                }
+                                else if seconds < 10
+                                {
+                                    Text("\(hours):\(minutes):0\(seconds)").multilineTextAlignment(.trailing).foregroundColor(Color.white)
+                                }
+                                if timerIsPaused {
+                                    HStack(spacing: 0)  {
+                                        Button(action:{
+                                            self.startTimer()
+                                            ts = false
+                                            abled = true
+                                            print("START")
+                                        }){
+                                            Image(systemName: "play.fill").foregroundColor(abled ? .pink : .white)
+                                            
+                                        }.disabled(abled)
+                                    }
+                                } else {
+                                    Button(action:{
+                                        print("STOP")
+                                        self.stopTimer()
+                                    }){
+                                        Image(systemName: "stop.fill").foregroundColor(Color.pink)
+                                    }.disabled(true)
+                                }
+                            }
+                        }
+                        ZStack
+                        {
+                            Rectangle().multilineTextAlignment(.center).frame(width: 200, height: 35).cornerRadius(15).foregroundColor(Color.pink)
+                            HStack {
+                                Text("Play White Noise:").foregroundColor(Color.white)
+                                HStack {
+                                    
+                                    Button(action: {
+                                        self.audioPlayer.play()
+                                    }) {
+                                        Image(systemName: "play.fill").foregroundColor(Color.white)
+                                    }
+                                    
+                                    Button(action: {
+                                        self.audioPlayer.pause()
+                                    }) {
+                                        Image(systemName: "pause.fill").foregroundColor(Color.white)
+                                    }
                                     
                                 }
                             }
-                        } else {
-                            Button(action:{
-                                print("STOP")
-                                self.stopTimer()
-                            }){
-                                Image(systemName: "stop.fill").foregroundColor(Color.white)
-                            }.disabled(true)
+                        .onAppear {
+                            let sound = Bundle.main.path(forResource: "song", ofType: "mp3")
+                            self.audioPlayer = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound!))
                         }
-                    }
-                }.padding(.leading, 250)
+                        }
+                }.padding(.trailing, 35)
+                LazyVStack(alignment: .leading)
+                {
+                    Text(text)
+                        .padding(.leading)
+                }
                 ScrollView()
                 {
                     ScrollViewReader
                     {value in
-                        LazyHStack()
+                        LazyVStack(alignment: .leading)
                         {
-                            
-                            VStack
+                            if (tim || disabled || ts) == false
                             {
-                                Text(text)
-                                    .padding(.horizontal, 25).foregroundColor(tim || disabled || ts ? .white : .black)
-                                ForEach(0..<arraySize) { i in
-                                    HStack(spacing:2)
-                                    {
-                                        Text("\(i+1). ")
-                                        ForEach(1..<5)
-                                        {index in
-                                            let a = Answer(b[index-1])
-                                            //var c = model.answerChoices[index]
-                                            
-                                            Button {
-                                                // Track the selected index
-                                                selectedAnswerIndices[i] = index
+                                VStack
+                                {
+                                    ForEach(0..<arraySize) { i in
+                                        HStack(spacing:2)
+                                        {
+                                            Text("\(i+1). ")
+                                            ForEach(1..<5)
+                                            {index in
+                                                let a = Answer(b[index-1])
+                                                //var c = model.answerChoices[index]
                                                 
-                                            } label: {
-                                                
-                                                ZStack {
-                                                    if submitted == false {
-                                                        Image(systemName: index == selectedAnswerIndices[i] ? "circle.fill" : "circle" ).font(.title)
-                                                            .frame(height: 48)
-                                                    }
-                                                    Text(a.choice)
-                                                }.accentColor(Color.black)
-                                            }.disabled(tim || disabled || ts)
+                                                Button {
+                                                    // Track the selected index
+                                                    selectedAnswerIndices[i] = index
+                                                    
+                                                } label: {
+                                                    
+                                                    ZStack {
+                                                        if submitted == false {
+                                                            Image(systemName: index == selectedAnswerIndices[i] ? "circle.fill" : "circle" ).font(.title)
+                                                                .frame(height: 48)
+                                                        }
+                                                        Text(a.choice)
+                                                    }.accentColor(Color.black)
+                                                }.disabled(tim || disabled || ts)
+                                            }
                                         }
-                                    }
-                                }.padding(.horizontal, 25).foregroundColor(tim || disabled || ts ? .white : .black)
+                                    }.padding(.horizontal, 25).foregroundColor(tim || disabled || ts ? .white : .black)
+                                }
                             }
                             
-                            VStack
+                            else if enabled == false
                             {
-                                Text("Fill in the answer key:").foregroundColor(enabled ? .white : .black).padding(.horizontal, 25).id(1)
-                                
-                                ForEach(0..<arraySize) { i in
-                                    HStack(spacing:2)
-                                    {
-                                        Text("\(i+1). ")
-                                        ForEach(1..<5)
-                                        {index in
-                                            let a = Answer(b[index-1])
-                                            //var c = model.answerChoices[index]
-                                            
-                                            Button {
-                                                // Track the selected index
-                                                selectedAnswerIndices2[i] = index
+                                VStack
+                                {
+                                    ForEach(0..<arraySize) { i in
+                                        HStack(spacing:2)
+                                        {
+                                            Text("\(i+1). ")
+                                            ForEach(1..<5)
+                                            {index in
+                                                let a = Answer(b[index-1])
+                                                //var c = model.answerChoices[index]
                                                 
-                                            } label: {
-                                                
-                                                ZStack {
-                                                    if submitted == false {
-                                                        Image(systemName: index == selectedAnswerIndices2[i] ? "circle.fill" : "circle" ).font(.title)
-                                                            .frame(height: 48)
-                                                    }
-                                                    Text(a.choice)
-                                                }.accentColor(Color.black)
-                                            }.disabled(enabled)
+                                                Button {
+                                                    // Track the selected index
+                                                    selectedAnswerIndices2[i] = index
+                                                    
+                                                } label: {
+                                                    
+                                                    ZStack {
+                                                        if submitted == false {
+                                                            Image(systemName: index == selectedAnswerIndices2[i] ? "circle.fill" : "circle" ).font(.title)
+                                                                .frame(height: 48)
+                                                        }
+                                                        Text(a.choice)
+                                                    }.accentColor(Color.black)
+                                                }.disabled(enabled)
+                                            }
                                         }
-                                    }
-                                }.padding(.horizontal, 25).foregroundColor(enabled ? .white : .black)
+                                    }.padding(.horizontal, 25).foregroundColor(enabled ? .white : .black)
+                                }
                             }
+                            
                             
                             
                         }
@@ -144,10 +212,14 @@ struct TabView: View {
                     
                 }
                 Spacer()
+                if disabled == false
+                {
                     Button (
                         action:
                             {
                                 clicks+=1
+                                text = "Fill in the answer key:"
+                                self.stopTimer()
                                 if clicks == 2
                                 {
                                     disabled = true
@@ -168,22 +240,27 @@ struct TabView: View {
                             }, label: {
                                 ZStack
                                 {
-                                    Rectangle().multilineTextAlignment(.center).frame(width: 395, height: 45).cornerRadius(17).foregroundColor(Color.pink)
+                                    Rectangle().multilineTextAlignment(.center).frame(width: 360, height: 45).cornerRadius(17).foregroundColor(Color.pink)
                                     Text(text2).fontWeight(.bold).multilineTextAlignment(.center).foregroundColor(Color.white)
                                 }.padding(.horizontal)
                             }
                         
                     )
+                }
                 
-                NavigationLink(destination: ResultsView(sai: selectedAnswerIndices, sai2: selectedAnswerIndices2, total: arraySize)) {
-                    ZStack
-                    {
-                        Rectangle().multilineTextAlignment(.center).frame(width: 395, height: 45).cornerRadius(17).foregroundColor(Color.pink)
-                        Text("Show Results").fontWeight(.bold).multilineTextAlignment(.center).foregroundColor(Color.white)
-                    }.padding(.horizontal)
-                    
-                }.navigationBarTitle("Bubble Away")
+                if cP == true
+                {
+                    NavigationLink(destination: ResultsView(sai: selectedAnswerIndices, sai2: selectedAnswerIndices2, total: arraySize)) {
+                        ZStack
+                        {
+                            Rectangle().multilineTextAlignment(.center).frame(width: 360, height: 45).cornerRadius(17).foregroundColor(Color.pink)
+                            Text("Show Results").fontWeight(.bold).multilineTextAlignment(.center).foregroundColor(Color.white)
+                        }.padding(.horizontal)
+                        
+                    }
+                }
                 
+                Text("Bismillah").foregroundColor(Color.white).navigationBarTitle(testName)
                 //                <Label: View, ResultsView>(destination: ResultsView(), label: Text("Show Results").fontWeight(.bold).multilineTextAlignment(.center).padding(.horizontal, 95.0).padding(.vertical, 10.0).background(Color.green).foregroundColor(Color.white).cornerRadius(15 as! () -> Label))
                 
                 
@@ -213,6 +290,7 @@ struct TabView: View {
                 timerIsPaused = true
                 timer?.invalidate()
                 timer = nil
+                enabled = false
             }
         }
     }
@@ -230,9 +308,9 @@ struct TabView: View {
     }
 }
 
-struct TabView_Previews: PreviewProvider {
+struct TabOneView_Previews: PreviewProvider {
     static var previews: some View {
-        TabView(arraySize: 52, text:"Select your answers: ", hours: 1, minutes: 2, seconds: 3)
+        TabOneView(arraySize: 20, text:"Select your answers: ", hours: 0, minutes: 1, seconds: 5, testName: "Bubble Away")
     }
 }
 
